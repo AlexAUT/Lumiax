@@ -131,7 +131,6 @@ void Level::updateAnimations(sf::Time& gameTime)
                 throw std::runtime_error("Only animation paths with exactly 2 points are supported");
 
 
-            // Hardcoded animation code
             float t = 2.f * (std::fmod(gameTime.asSeconds(), animation.duration) / animation.duration);
             if (t >= 1.f)
             {
