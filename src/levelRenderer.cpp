@@ -4,10 +4,22 @@
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <iostream>
 
-LevelRenderer::LevelRenderer(const Level& level) : mLevel{level}, mTileset(sf::Texture::loadFromFile(level.tilesetPath()).value())
+LevelRenderer::LevelRenderer(const Level& level) : mLevel{level}
 {
-    mTileset.setSmooth(true);
+    const auto& tilesets = level.getTilesets();
+    for (const auto& tileset : tilesets)
+    {
+        auto tex = mTilesetTextures.emplace_back(*sf::Texture::loadFromImage(tileset.image));
+        tex.setSmooth(false);
+        tex.setRepeated(false);
+        if (!tex.generateMipmap())
+        {
+            std::cout << "Could not generate mip maps for tilesets" << std::endl;
+        }
+    }
+
     for (const auto& layer : level.getTileLayers())
     {
         for (const auto& chunk : layer)
@@ -31,11 +43,50 @@ LevelRenderer::LevelRenderer(const Level& level) : mLevel{level}, mTileset(sf::T
                         const unsigned flippedDiagonallyFlag = 0x20000000;
                         const unsigned rotatedHexagonal120Flag = 0x10000000;
 
-                        u32 globalTileId = chunk.data[linearIndex] & (~(flippedHorizontallyFlag | flippedVerticallyFlag |
-                                                                        flippedDiagonallyFlag | rotatedHexagonal120Flag));
+                        u32 rawTileData = chunk.data[linearIndex];
 
-                        shape.setTexture(&mTileset);
-                        shape.setTextureRect(sf::IntRect({static_cast<int>(32 * (globalTileId - 1)) + 2, 2}, {28, 28}));
+                        u32 globalTileId = rawTileData & (~(flippedHorizontallyFlag | flippedVerticallyFlag |
+                                                            flippedDiagonallyFlag | rotatedHexagonal120Flag));
+
+                        std::size_t tilesetIndex = 0;
+                        while ((tilesetIndex + 1) < tilesets.size() && tilesets[tilesetIndex + 1].firstGid < globalTileId)
+                        {
+                            tilesetIndex++;
+                        }
+
+                        const auto& tileset = tilesets[tilesetIndex];
+
+                        u32 localTileId = globalTileId - tileset.firstGid;
+                        u32 col = localTileId % tileset.columns;
+                        u32 row = localTileId / tileset.columns;
+
+                        sf::IntRect texRect{{static_cast<int>(col * tileset.tileDim.x),
+                                             static_cast<int>(row * tileset.tileDim.y)},
+                                            static_cast<sf::Vector2i>(tileset.tileDim)};
+
+                        // Move origin to center to allow for easier tile rotations
+                        shape.setOrigin(shape.getSize() * 0.5f);
+                        shape.move(shape.getSize() * 0.5f);
+                        if (rawTileData & flippedDiagonallyFlag)
+                        {
+                            shape.rotate(sf::degrees(90.f));
+                            shape.scale({-1.f, 1.f});
+                        }
+                        if (rawTileData & flippedHorizontallyFlag)
+                        {
+                            shape.scale({-1.f, 1.f});
+                        }
+                        if (rawTileData & flippedVerticallyFlag)
+                        {
+                            shape.scale({1.f, -1.f});
+                        }
+                        if (rawTileData & rotatedHexagonal120Flag)
+                        {
+                            throw std::runtime_error("Rotated hexagon 120 tile rendering not implemented!");
+                        }
+
+                        shape.setTexture(&mTilesetTextures[tilesetIndex]);
+                        shape.setTextureRect(texRect);
                         mRects.push_back(shape);
                     }
                 }

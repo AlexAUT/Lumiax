@@ -63,7 +63,7 @@ int main()
 
     bool enableDebugDraw{false};
 
-    auto levelResult = LevelParser::fromFile("../../data/levels/level1.json");
+    auto levelResult = LevelParser::fromFile("../../data/levels/level01.json");
     if (!levelResult.has_value())
     {
         std::cout << "Failed to load level: " << levelResult.error();
@@ -115,12 +115,12 @@ int main()
 
             float deadzone = 20.f;
 
-            ships[0].thruster(Ship::Direction::Up,
+            ships[1].thruster(Ship::Direction::Up,
                               sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::R) > (-100.f + deadzone));
-            ships[0].thruster(Ship::Direction::Down,
+            ships[1].thruster(Ship::Direction::Down,
                               sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Z) > (-100.f + deadzone));
-            ships[0].thruster(Ship::Direction::Right, sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) > deadzone);
-            ships[0].thruster(Ship::Direction::Left, sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) < -deadzone);
+            ships[1].thruster(Ship::Direction::Right, sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) > deadzone);
+            ships[1].thruster(Ship::Direction::Left, sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) < -deadzone);
 
             for (auto& ship : ships)
                 ship.update();

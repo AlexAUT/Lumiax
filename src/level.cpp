@@ -32,6 +32,11 @@ void Level::addAnimation(unsigned layer, unsigned id, Animation animation)
     mAnimationLayers[layer].emplace_back(id, std::move(animation));
 }
 
+void Level::addTileset(Tileset tileset)
+{
+    mTilesets.push_back(std::move(tileset));
+}
+
 void Level::registerCollision(b2World& world)
 {
     registerTileCollision(world);

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 namespace sf
 {
-  class RenderWindow;
+class RenderWindow;
 }
 
 class Level;
@@ -13,15 +13,15 @@ class Level;
 class LevelRenderer
 {
 public:
-  LevelRenderer(const Level& level);
-  void render(sf::RenderWindow& window);
+    LevelRenderer(const Level& level);
+    void render(sf::RenderWindow& window);
 
 private:
-  void drawTiles(sf::RenderWindow& window);
-  void drawRects(sf::RenderWindow& window);
+    void drawTiles(sf::RenderWindow& window);
+    void drawRects(sf::RenderWindow& window);
 
-  const Level& mLevel;
+    const Level& mLevel;
 
-  sf::Texture mTileset;
-  std::vector<sf::RectangleShape> mRects;
+    std::vector<sf::Texture> mTilesetTextures;
+    std::vector<sf::RectangleShape> mRects;
 };

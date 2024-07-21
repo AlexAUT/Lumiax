@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SFML/Graphics/Image.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "types.hpp"
 
@@ -47,15 +48,26 @@ public:
         Val value;
     };
 
+    struct Tileset
+    {
+        sf::Image image;
+        unsigned firstGid{};
+        sf::Vector2u tileDim;
+        u32 columns{};
+    };
+
     void addChunk(unsigned layer, Chunk chunk);
     void addRect(unsigned layer, unsigned id, Rect rect);
     void addAnimation(unsigned layer, unsigned id, Animation animation);
+    void addTileset(Tileset tileset);
 
     std::vector<std::vector<IdWrapper<Rect>>>& getRects() { return mRectLayers; }
 
     const std::vector<std::vector<Chunk>>& getTileLayers() const { return mTiles; }
     const std::vector<std::vector<IdWrapper<Rect>>>& getRectLayers() const { return mRectLayers; }
     const std::vector<std::vector<IdWrapper<Animation>>>& getPolylineLayers() const { return mAnimationLayers; }
+
+    const std::vector<Tileset>& getTilesets() const { return mTilesets; }
 
     const std::filesystem::path& tilesetPath() const { return mTilesetPath; }
 
@@ -73,6 +85,7 @@ private:
     std::vector<std::vector<Chunk>> mTiles;
     std::vector<std::vector<IdWrapper<Rect>>> mRectLayers;
     std::vector<std::vector<IdWrapper<Animation>>> mAnimationLayers;
+    std::vector<Tileset> mTilesets;
 
     std::vector<b2Body*> mTileBodies;
     std::vector<std::vector<IdWrapper<b2Body*>>> mRectBodyLayers;
