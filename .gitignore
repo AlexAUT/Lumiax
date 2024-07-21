@@ -1,0 +1,5 @@
+.cache/clangd/index
+imgui.ini
+out/Debug
+data/levels/lumiax.tiled-session
+compile_commands.json

@@ -1,0 +1,14 @@
+{ "columns":24,
+ "image":"..\/..\/..\/..\/..\/Downloads\/glozzom24-32x.png",
+ "imageheight":32,
+ "imagewidth":768,
+ "margin":0,
+ "name":"glozzom24-32x",
+ "spacing":0,
+ "tilecount":24,
+ "tiledversion":"1.11.0",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.10"
+}
