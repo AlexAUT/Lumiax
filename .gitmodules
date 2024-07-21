@@ -1,0 +1,15 @@
+[submodule "external/sfml"]
+	path = external/sfml
+	url = https://github.com/sfml/sfml
+[submodule "external/imgui-sfml"]
+	path = external/imgui-sfml
+	url = https://github.com/SFML/imgui-sfml
+[submodule "external/imgui"]
+	path = external/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "external/box2d"]
+	path = external/box2d
+	url = https://github.com/erincatto/box2d
+[submodule "external/json"]
+	path = external/json
+	url = https://github.com/nlohmann/json.git
